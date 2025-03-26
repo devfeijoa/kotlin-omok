@@ -1,43 +1,46 @@
 package omok.domain
 
-class Board(
-    private val stones: Map<Position, StoneType> = emptyMap(),
-    private val rule: Rule = RenjuRule(),
-    private val size: Int = DEFAULT_SIZE,
-) {
-    val grid: Array<Array<StoneType>> = emptyArray()
-    val lastMove: Position?
-        get() = stones.keys.lastOrNull()
+class Board(stones: List<Stone>) {
+    private val _stones: MutableList<Stone> = stones.toMutableList()
+    val stones: List<Stone>
+        get() = _stones.toList()
 
-    fun getStoneAt(pos: Position): StoneType = stones[pos] ?: StoneType.EMPTY
+    val lastTurn: StoneType
+        get() =
+            _stones
+                .lastOrNull()
+                ?.color
+                ?: StoneType.EMPTY
 
-    fun placeStone(
+    val currentTurn: StoneType
+        get() =
+            when (lastTurn) {
+                StoneType.BLACK -> StoneType.WHITE
+                StoneType.WHITE -> StoneType.BLACK
+                StoneType.EMPTY -> StoneType.BLACK
+            }
+
+    fun put(
         position: Position,
-        color: StoneType,
-    ): Board {
-        require(isPositionValid(position)) { INVALID_POSITION }
-        require(isEmpty(position)) { ALREADY_PLACED }
-        require(rule.isValidMove(this, position, color)) { INVALID_PLACED }
-
-        return Board(stones + (position to color), rule, size)
+        stoneType: StoneType,
+    ) {
+        if (stoneType == lastTurn) throw NotYourTurnException()
+        if (!isEmpty(position)) throw DuplicatePutException()
+        _stones.removeIf { it.position == position }
+        _stones.addLast(Stone(position, stoneType))
     }
 
-    private fun isPositionValid(position: Position) = position.x in 0 until size && position.y in 0 until size
-
-    private fun isEmpty(position: Position) = !stones.containsKey(position)
-
-    fun isOmok(stone: Stone): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    fun put(stone: Stone) {
-        TODO("Not yet implemented")
+    private fun isEmpty(position: Position): Boolean {
+        return _stones.first { it.position == position }.color == StoneType.EMPTY
     }
 
     companion object {
-        const val DEFAULT_SIZE = 15
-        private const val INVALID_POSITION = "위치가 보드 범위를 벗어났습니다. 유효하지 않은 위치 입니다."
-        private const val INVALID_PLACED = "놓을 수 없는 위치 입니다."
-        private const val ALREADY_PLACED = "이미 돌이 놓여있는 위치입니다."
+        fun initial(): Board {
+            val stones =
+                (0..14)
+                    .flatMap { x -> (0..14).map { y -> Position(x, y) } }
+                    .map { Stone(it, StoneType.EMPTY) }
+            return Board(stones)
+        }
     }
 }

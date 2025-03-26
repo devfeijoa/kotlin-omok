@@ -1,10 +1,7 @@
 package omok.controller
 
 import omok.domain.Board
-import omok.domain.Position
-import omok.domain.RenjuRule
-import omok.domain.Stone
-import omok.domain.Turn
+import omok.library.BudoolRenjuRule
 import omok.view.InputView
 import omok.view.OutputView
 
@@ -13,31 +10,42 @@ class OmokGame(
     private val outputView: OutputView,
 ) {
     fun start() {
-        val board = Board(rule = RenjuRule())
-        val turn = Turn()
-        outputView.printStartMessage()
-        var position = Position(0, 0)
-        while (true) {
-            outputView.showBoard(board.grid)
-            val lastStone: Position? = board.lastMove
-            if (lastStone == null) {
-                outputView.printFirstTurn()
-            } else {
-                outputView.printNormalTurn(lastStone.color, position)
-            }
-            position = inputView.readPosition(turn)
-            val stone = getPosition(turn, position)
-            board.put(stone)
-            if (board.isOmok(stone)) break
-            turn.next()
+        val board = Board.initial()
+        val rule = BudoolRenjuRule()
+
+        val current = board.currentTurn
+        outputView.print(board.currentTurn)
+        val position = inputView.readPosition()
+
+        if (rule.checkWin(board, position)) {
         }
-        outputView.showGameResult(turn)
+        board.put(position, current)
+
+//        val board = Board(rule = RenjuRule())
+//        val turn = Turn()
+//        outputView.printStartMessage()
+//        var position = Position(0, 0)
+//        while (true) {
+//            outputView.showBoard(board.grid)
+//            val lastStone: Stone? = board.lastMove
+//            if (lastStone == null) {
+//                outputView.printFirstTurn()
+//            } else {
+//                outputView.printNormalTurn(lastStone.color, position)
+//            }
+//            position = inputView.readPosition(turn)
+//            val stone = getPosition(turn, position)
+//            board.put(stone)
+//            if (board.isOmok(stone)) break
+//            turn.next()
+//        }
+//        outputView.showGameResult(turn)
     }
 
-    private fun getPosition(
-        turn: Turn,
-        inputPosition: Position,
-    ): Stone {
-        return turn.stone(inputPosition)
-    }
+//    private fun getPosition(
+//        turn: Turn,
+//        inputPosition: Position,
+//    ): Stone {
+//        return turn.stone(inputPosition)
+//    }
 }

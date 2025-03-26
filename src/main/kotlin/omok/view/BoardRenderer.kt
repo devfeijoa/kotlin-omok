@@ -1,6 +1,5 @@
 package omok.view
 
-import omok.domain.Board
 import omok.domain.Position
 import omok.domain.StoneType
 

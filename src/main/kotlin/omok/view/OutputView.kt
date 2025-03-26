@@ -2,7 +2,6 @@ package omok.view
 
 import omok.domain.Position
 import omok.domain.StoneType
-import omok.domain.Turn
 
 class OutputView {
     fun printStartMessage() {
@@ -68,9 +67,20 @@ class OutputView {
         return board
     }
 
-    fun showGameResult(turn: Turn) {
-        println(MESSAGE_WINNER_RESULT.format(if (turn.isWhite()) "백" else "흑"))
+    fun showGameResult(stoneType: StoneType) {
+        println(MESSAGE_WINNER_RESULT.format(stoneType.toText()))
     }
+
+    fun print(lastTurn: StoneType) {
+        println("${lastTurn.toText()}의 차례입니다.")
+    }
+
+    private fun StoneType.toText() =
+        when (this) {
+            StoneType.BLACK -> "흑"
+            StoneType.WHITE -> "백"
+            StoneType.EMPTY -> ""
+        }
 
     companion object {
         private const val MESSAGE_START = "오목 게임을 시작합니다."
