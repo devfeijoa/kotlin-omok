@@ -1,6 +1,11 @@
 package omok.view
 
+import omok.domain.Position
+import omok.domain.Turn
+
 class InputView {
+    private val parser = PositionParser
+
     fun readPosition(): String {
         print(MESSAGE_INPUT_POSITION)
         val input = readlnOrNull()
@@ -9,6 +14,16 @@ class InputView {
             return readPosition()
         }
         return input
+    }
+
+    fun readPosition(turn: Turn): Position {
+        print(MESSAGE_INPUT_POSITION)
+        val input = readlnOrNull()
+        if (input == null) {
+            println(ERROR_INVALID_INPUT)
+            return readPosition(turn)
+        }
+        return parser.encode(input)
     }
 
     companion object {

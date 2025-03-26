@@ -84,8 +84,8 @@ class RenjuRule : Rule {
         color: StoneType,
     ): Int {
         var count = 0
-        var x = start.row + dx
-        var y = start.column + dy
+        var x = start.x + dx
+        var y = start.y + dy
 
         while (x in 0 until BOARD_SIZE && y in 0 until BOARD_SIZE) {
             if (grid[x][y] == color) {
@@ -108,16 +108,16 @@ class RenjuRule : Rule {
         }
     }
 
-    private fun Position.toPair() = Pair(this.row, this.column)
+    private fun Position.toPair() = Pair(this.x, this.y)
 
     companion object {
         private const val BOARD_SIZE = 15
         private val directions =
             listOf(
-                Pair(1, 0), // 가로
-                Pair(0, 1), // 세로
-                Pair(1, 1), // 대각선
-                Pair(1, -1), // 대각선
+                Pair(1, 0),
+                Pair(0, 1),
+                Pair(1, 1),
+                Pair(1, -1),
             )
     }
 }

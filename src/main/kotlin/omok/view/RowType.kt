@@ -1,4 +1,4 @@
-package omok.domain
+package omok.view
 
 enum class RowType(val value: Int) {
     A(0),
@@ -16,4 +16,9 @@ enum class RowType(val value: Int) {
     M(12),
     N(13),
     O(14),
+    ;
+
+    companion object {
+        fun from(value: Int): RowType = values().first { it.value == value }
+    }
 }
