@@ -29,7 +29,9 @@ class BudoolRenjuRule : RenjuRule {
         board: Board,
         position: Position,
     ): Boolean {
-        TODO("Not yet implemented")
+        val stones = board.stones
+        val blackStones = stones.filter { it.color == StoneType.BLACK }
+        val whiteStones = stones.filter { it.color == StoneType.WHITE }
     }
 
     override fun checkDoubleThreeFoul(
